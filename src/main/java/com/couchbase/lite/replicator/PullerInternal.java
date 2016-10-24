@@ -89,6 +89,7 @@ public class PullerInternal extends ReplicationInternal implements ChangeTracker
     protected Batcher<RevisionInternal> downloadsToInsert;
 
     private String str = null;
+    private boolean usePOST = false;
 
     public PullerInternal(Database db,
                           URL remote,
@@ -96,6 +97,16 @@ public class PullerInternal extends ReplicationInternal implements ChangeTracker
                           Replication.Lifecycle lifecycle,
                           Replication parentReplication) {
         super(db, remote, clientFactory, lifecycle, parentReplication);
+    }
+
+    public PullerInternal(Database db,
+                          URL remote,
+                          HttpClientFactory clientFactory,
+                          Replication.Lifecycle lifecycle,
+                          Replication parentReplication,
+                          boolean usePOST) {
+        this(db, remote, clientFactory, lifecycle, parentReplication);
+        this.usePOST = usePOST;
     }
 
     /**
@@ -177,6 +188,7 @@ public class PullerInternal extends ReplicationInternal implements ChangeTracker
         changeTracker.setRequestHeaders(requestHeaders);
         changeTracker.setContinuous(lifecycle == Replication.Lifecycle.CONTINUOUS);
         changeTracker.setActiveOnly(lastSequence == null && db.getDocumentCount() == 0);
+        changeTracker.setUsePOST(this.usePOST);
         changeTracker.start();
     }
 

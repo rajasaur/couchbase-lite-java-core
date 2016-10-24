@@ -582,7 +582,7 @@ public class ChangeTracker implements Runnable {
 
 
     // only for unit test
-    /* package */ void setUsePOST(boolean usePOST) {
+    public void setUsePOST(boolean usePOST) {
         this.usePOST = usePOST;
     }
 

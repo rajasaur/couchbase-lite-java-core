@@ -106,6 +106,8 @@ public class Replication
     private Object lockPendingDocIDs = new Object();
     private Set<String> pendingDocIDs;
 
+    private boolean usePOST = false;
+
     public enum ReplicationField {
         FILTER_NAME,
         FILTER_PARAMS,
@@ -179,7 +181,7 @@ public class Replication
     private void initReplicationInternal() {
         switch (direction) {
             case PULL:
-                replicationInternal = new PullerInternal(db, remote, clientFactory, lifecycle, this);
+                replicationInternal = new PullerInternal(db, remote, clientFactory, lifecycle, this, this.usePOST);
                 break;
             case PUSH:
                 replicationInternal = new PusherInternal(db, remote, clientFactory, lifecycle, this);
@@ -190,6 +192,10 @@ public class Replication
 
         addProperties(replicationInternal);
         replicationInternal.addChangeListener(this);
+    }
+
+    public void setUsePOST(boolean usePOST) {
+        this.usePOST = usePOST;
     }
 
     /**
